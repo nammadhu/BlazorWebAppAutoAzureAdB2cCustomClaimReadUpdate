@@ -1,0 +1,1 @@
+# BlazorAutoAzAdB2cAttrib
