@@ -1,5 +1,8 @@
 using BlazorAutoAzAdB2cAttrib.Client.Pages;
 using BlazorAutoAzAdB2cAttrib.Components;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Identity.Web;
+using Microsoft.Identity.Web.UI;
 
 namespace BlazorAutoAzAdB2cAttrib
 {
@@ -13,6 +16,21 @@ namespace BlazorAutoAzAdB2cAttrib
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
+
+            //new code starts
+            builder.Services.AddCascadingAuthenticationState();
+
+            builder.Services.AddHttpClient();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<HttpContextAccessor>();
+
+            builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(options => builder.Configuration.Bind("AzureAdB2C", options));
+
+            builder.Services.AddControllersWithViews()
+                .AddMicrosoftIdentityUI();
+            //new code ends
+
 
             var app = builder.Build();
 
@@ -31,6 +49,14 @@ namespace BlazorAutoAzAdB2cAttrib
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
+            
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapControllers();
+
             app.UseAntiforgery();
 
             app.MapRazorComponents<App>()
