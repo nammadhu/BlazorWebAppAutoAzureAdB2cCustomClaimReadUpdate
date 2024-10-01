@@ -29,6 +29,7 @@ namespace BlazorAutoAzAdB2cAttrib
 
             builder.Services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
+            builder.Services.AddRazorPages();
             //new code ends
 
 
