@@ -22,7 +22,7 @@ else
     <h5>for result Add breakpoint at Graphservice.cs and use as you wanted</h5>
     @if (user != null)
     {
-        <h1>@user.DisplayName</h1>
+        <h1>@user.Name</h1>
 
     }
     <table class="table">
@@ -50,7 +50,7 @@ else
 
 @code {
     private WeatherForecast[]? forecasts;
-    Microsoft.Graph.Models.User? user = null;
+    UserDto? user = null;
     string SearchResult = "";
     string searchInput = "";
     string userId = "32238262-b4ba-4328-909a-7bfdf1e13db0"; // Replace with the actual user object ID
