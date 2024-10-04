@@ -16,15 +16,19 @@ public class GraphService(IConfiguration configuration)
     string CustomAttributePrefix => $"extension_{AzureAdExtensionsAppId}_";//AzureAdExtensionsAppId  should NOt have dashes
     string CustomAttributeRolesKey => $"{CustomAttributePrefix}Roles";
     string[] userSelectionColumns => new[]{
-        "id", "displayName", "alternateEmailAddress", "createdDateTime", CustomAttributeRolesKey, $"extension_Roles"};
+        //"id", "displayName","othermails", "createdDateTime","ExternalUserStateChangeDateTime",
+        nameof(User.Id),nameof(User.DisplayName),nameof(User.OtherMails),nameof(User.CreatedDateTime),
+        CustomAttributeRolesKey};
     public async Task<List<User>?> SearchWithFilterStartsWith(string searchString, CancellationToken cancellationToken)
-       => await SearchWithFilterStartsWithPattern($"startswith(displayName,'{searchString}') or startswith(mail,'{searchString}')", cancellationToken);
+   => await SearchWithFilterStartsWithPattern($"startswith({nameof(User.DisplayName)},'{searchString}')", cancellationToken);
+    //or startswith({nameof(User.OtherMails)},'{searchString}')
+    //since othermails is a list items,so direct wont work //Todo
 
     private async Task<List<User>?> SearchWithFilterStartsWithPattern(string pattern, CancellationToken cancellationToken)
     {
         //here search is case insensitive.so no need of tolower kind of
         Console.WriteLine($"pattern is : {pattern}");
-        var t1= (await _graphClient.Users
+        var t1 = (await _graphClient.Users
             .GetAsync(requestConfiguration =>
             {
                 requestConfiguration.QueryParameters.Filter = pattern;// $"mail eq '{email}'";
@@ -41,7 +45,7 @@ public class GraphService(IConfiguration configuration)
             .GetAsync(requestConfiguration =>
             {
                 requestConfiguration.Headers.Add("ConsistencyLevel", "eventual");
-                requestConfiguration.QueryParameters.Search = $"\"displayName:{name}\"";
+                requestConfiguration.QueryParameters.Search = $"\"{nameof(User.DisplayName)}:{name}\"";
                 requestConfiguration.QueryParameters.Top = 25;
                 requestConfiguration.QueryParameters.Select = userSelectionColumns;
             }, cancellationToken))?.Value;
@@ -71,8 +75,9 @@ public class GraphService(IConfiguration configuration)
         var user = await _graphClient.Users[userId]
         .GetAsync(config =>
         {
-            config.QueryParameters.Select = new[] { "id", "displayName", "extension_d7e936cccb3943fabcdc992a0e94b0ae_RolesCard", "extension_d7e936cccb3943fabcdc992a0e94b0ae_Roles" };
+            config.QueryParameters.Select = userSelectionColumns;
         });
+        
         return user;
     }
 }

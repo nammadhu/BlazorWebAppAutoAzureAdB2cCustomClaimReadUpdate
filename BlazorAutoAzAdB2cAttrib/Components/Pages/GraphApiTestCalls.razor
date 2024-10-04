@@ -65,10 +65,10 @@ else
         Console.WriteLine("called");
         var t11 = await GraphService.SearchWithFilterStartsWith("madhu", CancellationToken.None);
         if (t11 != null && t11.Count > 0)
-            {
-                user = t11.First();
+        {
+            user = t11.First();
 
-            }
+        }
 
     }
 
@@ -83,8 +83,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
-        await SearchForMadhu();
-
+        //await GetUserDetails();
+        await GraphService.SearchWithFilterStartsWith("vmadhu",CancellationToken.None);
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
         forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
