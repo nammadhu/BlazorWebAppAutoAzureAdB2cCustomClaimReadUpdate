@@ -1,4 +1,5 @@
 ﻿@page "/weather"
+@using Shared
 @attribute [StreamRendering]
 @inject GraphService GraphService
 @rendermode @(new InteractiveServerRenderMode(false))
@@ -18,7 +19,7 @@ else
     <button @onclick="GetUserDetails">Adds</button>
     @if (user != null)
     {
-        <h1>@user.DisplayName</h1>
+        <h1>@user.Name</h1>
 
     }
     <table class="table">
@@ -46,19 +47,21 @@ else
 
 @code {
     private WeatherForecast[]? forecasts;
-    Microsoft.Graph.Models.User? user = null;
-    string userId = "32238262-b4ba-4328-909a-7bfdf1e13db0"; // Replace with the actual user object ID
+    UserDto? user = null;
+    string userId = "1766efe7-79ca-4c33-bb90-f5ab03d58066"; // Replace with the actual user object ID
+
+    CancellationToken cancellationToken;
     private async Task GetUserDetails()
     {
         Console.WriteLine("called");
-        user = await GraphService.GetUserAsync(userId);
+        user = await GraphService.GetUserAsync(userId, cancellationToken);
     }
 
     private async Task UpdateRoles()
     {
         Console.WriteLine("callesssd");
-        string roles = "Admin,Editor";
-        await GraphService.UpdateUserRolesAsync(userId, roles);
+        var roles = new List<string>() { "Admin"};
+        await GraphService.UpdateUserRolesCustomAttributeByOverWriting(userId, roles, cancellationToken);
         await GetUserDetails();
     }
 

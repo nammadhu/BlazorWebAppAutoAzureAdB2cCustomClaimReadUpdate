@@ -3,6 +3,7 @@ using BlazorAutoAzAdB2cAttrib.Components;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
+using Serilog;
 
 namespace BlazorAutoAzAdB2cAttrib
 {
@@ -11,6 +12,13 @@ namespace BlazorAutoAzAdB2cAttrib
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            Log.Logger = new LoggerConfiguration().CreateLogger();
+//.ReadFrom.Configuration(builder.Configuration)
+//// set default minimum level
+//.MinimumLevel.Debug()
+//.CreateLogger();
+            Log.Warning("Loading started");
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
