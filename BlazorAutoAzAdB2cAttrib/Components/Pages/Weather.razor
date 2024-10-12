@@ -55,6 +55,7 @@ else
     {
         Console.WriteLine("called");
         user = await GraphService.GetUserAsync(userId, cancellationToken);
+        var t1 = await GraphService.SearchUsersByNameOrEmail("madhu",null, cancellationToken);
     }
 
     private async Task UpdateRoles()

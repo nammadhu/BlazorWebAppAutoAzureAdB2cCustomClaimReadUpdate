@@ -108,7 +108,7 @@ public class GraphService(ILogger<GraphService> logger, IConfiguration configura
             Name = graphUser.DisplayName,
             //Created = graphUser.CreatedDateTime,
             //LastModified = graphUser.LastModifiedDateTime,
-            Email = graphUser.OtherMails?[0],
+            Email = graphUser.OtherMails?.FirstOrDefault(),
             PhoneNumber = graphUser.MobilePhone
         };
         user.Roles = [];
